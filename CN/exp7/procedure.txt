@@ -1,0 +1,51 @@
+
+Step 1: Prepare Your Environment
+Launch Wireshark.
+
+Step 2: Start Packet Capture and Generate Traffic
+Select Interface: In Wireshark, select your active interface (Wi-Fi or Ethernet).
+Apply Capture Filter (Optional): To minimize noise, use this filter before starting capture:
+tcp port 80 or tcp port 443
+(HTTP uses port 80; HTTPS/encrypted traffic uses port 443).
+Start Capture.
+Generate HTTP Traffic: Open a browser (like Chrome or Edge) and visit a non-secure (non-HTTPS) website. A good choice is a simple website that definitely uses HTTP (like the older versions of a news site or a local test server). If you can't find a clean HTTP site, visiting any site like example.com will generate TCP/IP traffic, but the HTTP part will be encrypted (HTTPS/TLS).
+Tip: Use the browser's developer tools (F12) to ensure the request is actually HTTP, or use a command-line tool like curl to guarantee an unencrypted request.
+Step 3: Analyze the TCP and IP Headers
+Apply Display Filter: In the Wireshark Display Filter box, type:
+tcp
+Look for a sequence of three packets that make up the TCP 3-way Handshake:
+Stop Capture: Quickly switch back to Wireshark and click the Stop button (r
+
+Examine the Network Layer (IP):
+Click on the first TCP packet ([SYN]).
+In the middle "Details" pane, expand the Internet Protocol Version 4 (or 6) layer.
+Analyze the key fields:
+Source Address: Your machine's IP address (Client).
+Destination Address: The web server's IP address (Network Layer).
+
+Examine the Transport Layer (TCP):
+Expand the Transmission Control Protocol layer.
+Analyze the key fields:
+Source Port: Random high number (Client).
+Destination Port: 80 (HTTP) or 443 (HTTPS) (Server).
+Sequence Number and Acknowledgement Number: These are crucial for ordered and reliable delivery.
+Flags ([SYN], [ACK]): Shows the state of the connection.rotocol: Shows TCP (Value 6). This identifies the Transport Layer protocol being carried.ed square icon).
+
+
+
+
+
+
+
+Step 4: Analyze the Application Layer (HTTP)
+Apply Display Filter: In the Wireshark Display Filter box, type:
+http
+Examine the Request: Find the packet labeled HTTP with an Info field like GET / or GET /index.html.
+Expand the Hypertext Transfer Protocol layer.
+Request Line: Shows the method (GET), the path (/), and the version (HTTP/1.1).
+Header Fields: Contains information like Host, User-Agent, and Accept-Language.
+Examine the Response: Find the packet labeled HTTP with an Info field like HTTP/1.1 200 OK.
+Expand the Hypertext Transfer Protocol layer.
+Status Line: Shows the status code (200 OK) which means the request succeeded.
+
+Header Fields: Contains server information, date, and content type.
